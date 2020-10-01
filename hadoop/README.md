@@ -1,7 +1,7 @@
 # Librairie Hadoop pour Windows
 
 Afin de pouvoir utiliser correctement Spark avec le système de fichier Windows il est nécessaire de disposer du binaire winutils.exe.
-Ce bénaire permet d'ecrire des données depuis Spark le système de fichier Windows
+Ce binaire permet d'ecrire des données depuis Spark le système de fichier Windows
 
 Spark attend ```winutils.exe``` dans l'installation Hadoop "<Répertoire d'installation Hadoop>/bin/winutils.exe" (notez le dossier "bin")
 
