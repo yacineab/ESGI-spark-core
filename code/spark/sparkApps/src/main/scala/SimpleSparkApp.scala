@@ -6,4 +6,9 @@ object SimpleSparkApp extends App {
     .appName("Simple Spark App")
     .master("local[*]")
     .getOrCreate()
+
+  // Create First DataFrame
+  val rangeDF = spark.range(1000).toDF("number")
+  rangeDF.show(15)
+
 }
