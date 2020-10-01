@@ -25,4 +25,11 @@ object SimpleFunctions extends App {
   //Calcul la somme des carrées
   def sumOfSquare(x:Double, y: Double): Double = square(x) + square(y)
 
+  def pgcd(a:Int, b:Int): Int  = {
+    if(b==0)
+      a
+    else
+      pgcd(b, a%b)
+  }
+  println(pgcd(10,12))
 }
