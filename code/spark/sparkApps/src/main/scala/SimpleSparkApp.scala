@@ -7,6 +7,8 @@ object SimpleSparkApp extends App {
     .master("local[*]")
     .getOrCreate()
 
+  spark.sparkContext.setLogLevel("ERROR")
+
   // Create First DataFrame
   val rangeDF = spark.range(1000).toDF("number")
   rangeDF.show(15)
