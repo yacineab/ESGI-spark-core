@@ -3,14 +3,14 @@ import org.apache.spark.sql.functions.desc
 
 object FlightData extends App {
 
-  // Instantation du SparkSession
+  // Instanciation du SparkSession
   val spark = SparkSession
     .builder()
     .appName("Flight Data TP")
     .master("local[*]")
     .getOrCreate()
 
-  // Craetion du DataFrame flighData à partir des données CSV
+  // Création du DataFrame flighData à partir des données CSV
 
   val flightData2015DF = spark.read.option("inferSchema","true").option("header","true").csv("../../../data/flight-data/2015-summary.csv")
 
@@ -19,14 +19,14 @@ object FlightData extends App {
   //affichage des 20 premiere lignes
   // flightData2015DF.show()
 
-  // la methode explain renvoie le plan d'execution du DataFrame
+  // la methode explain renvoie le plan d'execution des transformations DataFrame
   flightData2015DF.explain()
 
   // création dataFrame de vols locaux
 
   val localDF = flightData2015DF.where("DEST_COUNTRY_NAME=ORIGIN_COUNTRY_NAME")
 
-  // Sort du DataFrame
+  // Tri du DF selon le nombre de vols
   val sortedDF = flightData2015DF.sort("count")
 
   //si on souhaite trier les données par ordre descedant on appelle la fonction desc sur la colonne count
