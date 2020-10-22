@@ -197,7 +197,7 @@ object FlightData extends App {
     " DEST_COUNTRY_NAME, " +
     " count(1) " +
     " FROM flight_data_2015_table " +
-    "GROUP BY DEST_COUNTRY_NAME ")
+    " GROUP BY DEST_COUNTRY_NAME ")
 
   println("---- Show SQL WAY -----")
   sqlWay.show()
@@ -213,10 +213,37 @@ object FlightData extends App {
   /**
    * On remarque que les deux s'excute exactement de la même maniere
    */
+  
   println("---- explain physical plan SQLWAY -----")
   sqlWay.explain
 
   println("---- explain physical plan DF Way -----")
   dataFrameWay.explain
+
+  /**
+   * Select top 5 destination
+   */
+
+  // Using SQL
+  println("----TOP 5  SQLWAY -----")
+  val maxSql = spark
+    .sql("SELECT " +
+      "DEST_COUNTRY_NAME, " +
+      "sum(count) as destination_total " +
+      "FROM flight_data_2015_table " +
+      "GROUP BY DEST_COUNTRY_NAME " +
+      "ORDER BY sum(count) DESC LIMIT 5")
+
+  maxSql.show()
+
+  // Using DF
+  println("----TOP 5  DF WAY -----")
+  val maxDF = flightData2015DF
+    .groupBy("DEST_COUNTRY_NAME").sum("count")
+    .withColumnRenamed("sum(count)", "destination_total")
+    .sort(desc("destination_total"))
+    .limit(5)
+
+  maxDF.show()
 
 }
