@@ -181,4 +181,14 @@ object FlightData extends App {
   upperDS.select("DEST_COUNTRY_NAME", "ORIGIN_COUNTRY_NAME","count").show()
 
 
+  // On peut créer une table temporaire et la requeter en SQL avec SPARK
+  flightData2015DF.createOrReplaceTempView("df")
+  flightDS.createOrReplaceTempView("ds")
+
+  val dfreq = spark.sql("select * from df limit 10")
+  val dsreq = spark.sql("select * from ds limit 10")
+  println("--------- DF SQL ------------")
+  dfreq.show()
+  println("--------- DS SQL ------------")
+  dsreq.show()
 }
