@@ -182,13 +182,41 @@ object FlightData extends App {
 
 
   // On peut créer une table temporaire et la requeter en SQL avec SPARK
-  flightData2015DF.createOrReplaceTempView("df")
-  flightDS.createOrReplaceTempView("ds")
+  flightData2015DF.createOrReplaceTempView("flight_data_2015_table")
+  flightDS.createOrReplaceTempView("ds_table")
 
-  val dfreq = spark.sql("select * from df limit 10")
-  val dsreq = spark.sql("select * from ds limit 10")
+  val dfreq = spark.sql("select * from flight_data_2015_table limit 10")
+  val dsreq = spark.sql("select * from ds_table limit 10")
   println("--------- DF SQL ------------")
   dfreq.show()
   println("--------- DS SQL ------------")
   dsreq.show()
+
+
+  val sqlWay = spark.sql(" SELECT " +
+    " DEST_COUNTRY_NAME, " +
+    " count(1) " +
+    " FROM flight_data_2015_table " +
+    "GROUP BY DEST_COUNTRY_NAME ")
+
+  println("---- Show SQL WAY -----")
+  sqlWay.show()
+
+  val dataFrameWay = flightData2015DF
+    .groupBy('DEST_COUNTRY_NAME)
+    .count()
+
+  println("---- Show DF Way -----")
+  dataFrameWay.show()
+
+  // On vérifie le plan d'exeuction pour comparer l'execution DataFrame et SQL
+  /**
+   * On remarque que les deux s'excute exactement de la même maniere
+   */
+  println("---- explain physical plan SQLWAY -----")
+  sqlWay.explain
+
+  println("---- explain physical plan DF Way -----")
+  dataFrameWay.explain
+
 }
