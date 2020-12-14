@@ -1,6 +1,7 @@
 #Wikipedia
 Recupérez le code depuis le répertoire `code/spark/wikipedia`
-Le fichier de données se trouve sour le réperoitre de votre projet `src/main/resources/wikipedia`.
+Recuperer les données pour ce tp depuis ce lien: [WikipediaTP-DataSet](https://we.tl/t-YRA2IISqeY)
+Le fichier de données doit être placé sous votre reportoire projet dans :`src/main/resources/wikipedia/`.
 
 Dans ce tp, vous apprendrez à connaître Spark en explorant les articles de Wikipédia en texte intégral.
 
