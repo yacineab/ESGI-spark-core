@@ -1,4 +1,4 @@
-#Wikipedia
+# Wikipedia
 Recupérez le code depuis le répertoire `code/spark/wikipedia`
 Recuperer les données pour ce tp depuis ce lien: [WikipediaTP-DataSet](https://we.tl/t-YRA2IISqeY)
 Le fichier de données doit être placé sous votre reportoire projet dans :`src/main/resources/wikipedia/`.
@@ -14,22 +14,22 @@ Dans ce TP, nous utiliserons nos données en texte intégral de Wikipédia pour 
 
 Vous effectuerez cet exercice sur un seul nœud (votre ordinateur portable), mais vous pouvez également vous diriger vers [Databricks Community Edition](https://community.cloud.databricks.com/login.html) pour expérimenter gratuitement votre code sur un «micro-cluster».
 
-###Read-in Wikipedia Data
+### Read-in Wikipedia Data
 Nous avons déjà implémenté une méthode **parse** dans l'objet **WikipediaData** qui parse une ligne du dataset et la transforme en **WikipediaArticle**.
 
 Créez un RDD (en implémentant **val wikiRdd**) qui contient les objets **WikipediaArticle d'articles**.
 
 
-###Calculer un classement des langages de programmation
+### Calculer un classement des langages de programmation
 Nous utiliserons une métrique simple pour déterminer la popularité d'un langage de programmation: le nombre d'articles Wikipédia mentionnant le langage au moins une fois.
 
 #### Classment des langages tentative#1: *RankLang*
-#####Computing occurrencesOfLang
+##### Computing occurrencesOfLang
 Commencez par implémenter une méthode d'aide **occurrencesOfLang** qui calcule le nombre d'articles dans un **RDD** de type **RDD[WikipediaArticles]** qui mentionnent au moins une fois la language donné.
 
 Dans un souci de simplicité, nous vérifions qu'au moins un mot (délimité par des espaces) du texte de l'article est égal au langage donné.
 
-#####Calcul du classement, rankLangs
+##### Calcul du classement, rankLangs
 En utilisant **occurrencesOfLang**, implémentez une méthode **rankLangs** qui calcule une liste de paires où le deuxième composant de la paire est le nombre d'articles qui mentionnent la langage (le premier composant de la paire est le nom du langage).
 
 La liste doit être triée par ordre décroissant. Autrement dit, selon ce classement, la paire avec le deuxième composant le plus élevé (le nombre) devrait être le premier élément de la liste.
@@ -41,7 +41,7 @@ List(("Scala", 999999), ("JavaScript", 1278), ("LOLCODE", 982), ("Java", 42))
 *Faites attention à environ combien de temps il faut pour exécuter cette partie! (Cela devrait prendre des dizaines de secondes.)*
 
 #### Classment des langages tentative#2: *rankLangsUsingIndex*
-#####Calculer un index inversé
+##### Calculer un index inversé
 Un index inversé est une structure de données d'index stockant un mappage d'un contenu, tel que des mots ou des nombres, à un ensemble de documents. En particulier, le but d'un index inversé est de permettre des recherches rapides en texte intégral.
 Dans notre cas d'utilisation, un index inversé serait utile pour mapper les noms des langages de programmation à la collection d'articles Wikipédia qui mentionnent le nom au moins une fois.
 
@@ -52,7 +52,7 @@ Ce **RDD** contient des paires, de sorte que pour chaque langage de la liste de 
 
 *Astuce: vous pouvez utiliser les méthodes **flatMap** et **groupByKey** sur RDD pour cette partie.*
 
-#####Calcul du classement, rankLangsUsingIndex
+##### Calcul du classement, rankLangsUsingIndex
 Utilisez la méthode **makeIndex** implémentée dans la partie précédente pour implémenter une méthode plus rapide pour calculer le classement des langages.
 
 
