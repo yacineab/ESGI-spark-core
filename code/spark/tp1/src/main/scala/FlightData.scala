@@ -234,7 +234,11 @@ object FlightData extends App {
       "GROUP BY DEST_COUNTRY_NAME " +
       "ORDER BY sum(count) DESC LIMIT 5")
 
+<<<<<<< HEAD
  // maxSql.show()
+=======
+  maxSql.show()
+>>>>>>> 6c3c767df6ffd8a1a670aafe26c5a5748a98f056
 
   // Using DF
   println("----TOP 5  DF WAY -----")
@@ -244,8 +248,13 @@ object FlightData extends App {
     .sort(desc("destination_total"))
     .limit(5)
 
+<<<<<<< HEAD
 //  maxDF.show()
 
   val hashed = flightData2015DF.withColumn("hashed", sha1(col("DEST_COUNTRY_NAME")))
   hashed.show(false)
+=======
+  maxDF.show()
+
+>>>>>>> 6c3c767df6ffd8a1a670aafe26c5a5748a98f056
 }
