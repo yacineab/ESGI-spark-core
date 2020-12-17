@@ -1,6 +1,7 @@
 package stackoverflow
 
 import org.apache.spark.sql.{DataFrame, Dataset}
+import org.apache.spark.sql.functions.max
 
 import scala.annotation.tailrec
 
@@ -35,7 +36,39 @@ class StackOverflowUtils extends Serializable {
   /** Group the questions and answers together */
     //: RDD[(QID, Iterable[(Question, Answer)])]
   def groupedPostings(postings: DataFrame): DataFrame = {
-      ???
+      // Question DF
+      val qDF = postings.filter("postTypeId=1")
+      println("------- GroupedPosting Function ---------")
+      println("------- Question DF ---------")
+      qDF.show(false)
+
+      // asnwers DF
+      val aDFColumns = Seq("a_postTypeId","a_id","a_acceptedAnswer","a_parentId","a_score","a_tag")
+
+      val aDF = postings.filter("postTypeId=2 AND parentId is NOT NULL ").toDF(aDFColumns:_*)
+      println("------- Answer DF ---------")
+      aDF.show(false)
+
+      // Jointure entre aDF et qDF
+      val selected = qDF.columns
+      // resultat  : (questsionsDF.columns, sonMAxScore)
+      val qdf_answerMAXScore = qDF
+        .join(aDF,
+          qDF.col("id").equalTo(aDF.col("a_parentId")),
+        "inner").
+        groupBy(selected.head, selected.tail:_*)
+        .agg(max("a_score") as "answer_maxscore")
+
+      println("---- qdf_answerMAXScore DF -----")
+      qdf_answerMAXScore.show()
+
+      // checking the abnswers for a given ParentID
+      println("---- checking the answers for a given parentId 32414, and check the max score among them -----")
+
+      aDF.where("a_parentId=32414").show()
+      // return dF questsionsDF.columns, sonMAxScore
+     qdf_answerMAXScore
+
   }
 
 
@@ -43,6 +76,7 @@ class StackOverflowUtils extends Serializable {
   def vectorPostings(scored: Dataset[(Posting, HighScore)]): Dataset[(LangIndex, HighScore)] = {
     /** Return optional index of first language that occurs in `tags`. */
     //  import scored.sparkSession.implicits._  => décommenter cette ligne
+    import scored.sparkSession.implicits._
     def firstLangInTag(tag: String, ls: List[String]): Option[Int] = {
       if (tag.isEmpty) None
       else if (ls.isEmpty) None
@@ -55,7 +89,10 @@ class StackOverflowUtils extends Serializable {
         }
       }
     }
-    ???
+
+    // pour chaque vecteur scoring, on multiplie l'index (dans la liste langs) du langage du programation * langSpread (50000)
+    // langSpread est un paramètre de notre algorithme Kmeans pour définir la distance euclidienne entre chaque mean
+    scored.map( scors => (firstLangInTag(scors._1.tags, langs).get * langSpread, scors._2))
   }
 
 
@@ -220,7 +257,7 @@ class StackOverflowUtils extends Serializable {
       val maxindex = clustred.maxBy(_._2)._1
       val langLabel: String   = langs(maxindex)  // most common language in the cluster
       val langPercent: Double = clustred(maxindex) * 100 / vs.size // percent of the questions in the most common language
-      val clusterSize: Int    = ???
+      val clusterSize: Int    = vs.size
       val sortedScores = vs.map(_._2).toList.sorted
       val medianScore: Int    = {
         if( clusterSize % 2 == 0  ) {

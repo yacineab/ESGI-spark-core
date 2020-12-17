@@ -17,3 +17,7 @@ build/
 
 # mac
 .DS_Store
+
+# data
+*.csv
+*.dat
