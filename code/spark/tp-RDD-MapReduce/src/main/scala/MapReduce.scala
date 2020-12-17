@@ -10,22 +10,28 @@ object MapReduce extends App {
     .appName("MapReduce with Spark RDD")
     .master("local[*]").getOrCreate()
 
+  // set logs to errors
+  spark.sparkContext.setLogLevel("ERROR")
   // Ceating rdd from a collection
   val myCollection = "Spark engin by IBAD2 class from ESGI".split(" ")
   val wordsCollectionRDD = spark.sparkContext.parallelize(myCollection)
 
+
   /**
    * RDD From source file
    */
-  val humanRights = spark.sparkContext.textFile("src/main/resources/humanRights.txt")
 
+  val humanRights = spark.sparkContext.textFile("src/main/resources/humanRights.txt")
+  humanRights.take(5).foreach(println(_))
   /**
    * RDD OF WORDS: flatMap and split by space , we use flatmap instead of Map beacause "split" retrun an Array
    */
 
-  val wordsRDD = humanRights.flatMap(_.split(" "))
+ val wordsRDD = humanRights.flatMap(_.split(" "))
+
+  wordsRDD.take(5).foreach(println(_))
   //counting element of rdd
-  val wordsElements = wordsRDD.count()
+ val wordsElements = wordsRDD.count()
 
   println("counting 1 : " + wordsElements)
   // RDD transforlation remove ponctuation from words
@@ -44,9 +50,11 @@ object MapReduce extends App {
 
   // filtring rdd starting with a letter, example A
   val startingwithA = rights.filter(_.startsWith("A"))
+ // startingwithA.take(10).foreach(println(_))
 
   // Sort by word's length, seconde parametere = false to sort by desc
   val sortedRightRDD = rights.sortBy(_.length, false)
+  //sortedRightRDD.take(10).foreach(println(_))
 
   /**
    * REDUCE
@@ -76,13 +84,31 @@ object MapReduce extends App {
   // Using the previous function with Reduce on RDD to calculate the biggest word on our RDD
 
   val biggestWordonRDD  = rights.reduce(biggerWord)
-  println(s"bigest word in RDD is $biggestWordonRDD")
+  println(s"bigest word in RDD is: $biggestWordonRDD")
+
 
   /**
    * Map Reduce: Using the MapReduce Algorithme calculating the number of occurence of each word on our RDD, then sorting by the largest appearance
    */
 
-  val mapreduceRDD = rights.map((_,1)).reduceByKey(_+_).sortBy(_._2, false)
+  println("----MapReduce... -----")
+  // first transfert all words to lower case
+  val rightsLowerCase = rights.map(_.toLowerCase)
+
+  // algo MapReduce
+  val mapreduceRDD = rightsLowerCase.map((_,1)).reduceByKey(_+_) // renvoi (mot, l'occurrence )
+    .sortBy(_._2, false) // tri par nombre d'occurrence
+
+  // vérifier le nombre de partitions dans le RDD
+  val nbpartitions=  mapreduceRDD.getNumPartitions
+  println(s"Mapredecue RDD has: $nbpartitions partitions")
+
+  // On peut changer le nombre de partitions avec .repartition
+  val repartitionRDD = mapreduceRDD.repartition(5)
+
+  // Pour diminuer le nombre de partitions avec colaesce
+  // avec colesce le nombre de partition doit être inférieur à nbpartitions, sinon il sera ignoré
+  val coalesceRDD = mapreduceRDD.coalesce(1)
 
   // Saving our result as textFile
   mapreduceRDD.saveAsTextFile("src/main/resources/mapreduce")
