@@ -26,4 +26,4 @@ Spark attend ```winutils.exe``` dans l'installation Hadoop "<Répertoire d'insta
 - Dans le champ Valeur , entrez votre chemin du répertoire ```hadoop``` . e.g: ```C:\tmp\hadoop```
 - Cliquez sur OK et appliquez les modifications 
 
-
+![Variables Environnement](https://github.com/yacineab/ESGI-spark-core/blob/master/hadoop/vehadoop.png)
