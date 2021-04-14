@@ -7,9 +7,13 @@ Spark attend ```winutils.exe``` dans l'installation Hadoop "<Répertoire d'insta
 
 ### Création de HADOOP_HOME
 
-- Créer un un répertoire pour les binaire hadoop: e.g: ```C:\Program Files\hadoop\bin\```
-- Télécharger le fichier ```winutils.exe```
-- Placer le fichier ```winutils.exe``` dans le répertoire ```..\hadoop\bin\```
+- Créer un un répertoire pour les binaire hadoop: e.g: ```C:\tmp\hadoop\bin\```
+- Télécharger le fichier [winutils.exe](https://github.com/yacineab/ESGI-spark-core/blob/master/hadoop/bin/winutils.exe "hadoop home")
+- Placer le fichier ```winutils.exe``` dans le répertoire ```C:\tmp\hadoop\bin\```
+
+- Télécharger le fichier hadoop.dll depuis le github : [hadoop.dll](https://github.com/yacineab/ESGI-spark-core/blob/master/hadoop/bin/hadoop.dll "Download Hadoop.dll")  
+-	Copier le fichier hadoop.dll dans `C:/Windosw/System32`
+
 
 
 #### Definir la variable d'environnement ```HADOOP_HOME```
