@@ -13,9 +13,9 @@ object SimpleSparkApp extends App {
   val rangeDF = spark.range(1000).toDF("number")
   rangeDF.show(15)
 
-  val fichierDF = spark.read.csv("/user/myname/file.csv")
+  //val fichierDF = spark.read.csv("/user/myname/file.csv")
   // trasformation sur Dataframe
-  fichierDF.write.parquet("/path/tohdfs")
+  //fichierDF.write.parquet("/path/tohdfs")
 
 
 }
